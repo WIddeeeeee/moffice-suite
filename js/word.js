@@ -1,0 +1,30 @@
+// MWord: toolbar + open/export + word count + autosave
+document.addEventListener('DOMContentLoaded',()=>{
+  const ed=document.getElementById('editor'); if(!ed) return;
+  const count=document.getElementById('wordCount');
+  const update=()=>{ const t=ed.innerText.trim(); count.textContent=(t? t.split(/\s+/).length:0)+' words';
+    try{localStorage.setItem('moffice-doc',ed.innerHTML); localStorage.setItem('moffice-title',document.getElementById('docTitle').value);}catch(e){} };
+  ed.addEventListener('input',update);
+  const saved=localStorage.getItem('moffice-doc'); if(saved) ed.innerHTML=saved;
+  const savedT=localStorage.getItem('moffice-title'); if(savedT) document.getElementById('docTitle').value=savedT;
+  update();
+  document.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()=>{ document.execCommand(b.dataset.cmd,false,b.dataset.val||null); ed.focus(); update(); }));
+  document.getElementById('fontFamily').addEventListener('change',e=>document.execCommand('fontName',false,e.target.value));
+  document.getElementById('fontSize').addEventListener('change',e=>document.execCommand('fontSize',false,e.target.value));
+  document.getElementById('foreColor').addEventListener('input',e=>document.execCommand('foreColor',false,e.target.value));
+  document.getElementById('hiliteColor').addEventListener('input',e=>document.execCommand('hiliteColor',false,e.target.value));
+  document.getElementById('clearFormatBtn').onclick=()=>{document.execCommand('removeFormat'); update();};
+  document.getElementById('insertTableBtn').onclick=()=>{document.execCommand('insertHTML',false,'<table><tr><th>Header 1</th><th>Header 2</th></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table><p></p>');};
+  document.getElementById('insertImageBtn').onclick=()=>{const u=prompt('Image URL:'); if(u) document.execCommand('insertImage',false,u);};
+  document.getElementById('openDocBtn').onclick=()=>document.getElementById('docFile').click();
+  document.getElementById('docFile').addEventListener('change',e=>{const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+    r.onload=()=>{ if(f.name.endsWith('.html')||f.name.endsWith('.htm')) ed.innerHTML=r.result; else if(f.name.endsWith('.md')) ed.innerHTML='<p>'+String(r.result).replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>'; else ed.innerText=r.result; document.getElementById('docTitle').value=f.name; update(); };
+    r.readAsText(f);});
+  const dl=(name,content,type)=>{const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type})); a.download=name; a.click();};
+  document.getElementById('exportDoc').addEventListener('change',e=>{const v=e.target.value; const base=(document.getElementById('docTitle').value||'document').replace(/[^\w\- ]+/g,'').trim()||'document';
+    if(v==='txt') dl(base+'.txt',ed.innerText,'text/plain');
+    if(v==='md') dl(base+'.md',ed.innerText,'text/markdown');
+    if(v==='html') dl(base+'.html','<!DOCTYPE html><html><body>'+ed.innerHTML+'</body></html>','text/html');
+    if(v==='pdf') window.print();
+    e.target.value='';});
+});
