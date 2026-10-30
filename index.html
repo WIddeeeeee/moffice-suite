@@ -14,6 +14,7 @@
     <button data-app="sheets">📊 MSheets</button>
     <button data-app="video">🎬 MVideo</button>
     <button data-app="formats">🗂 Formats</button>
+    <button data-app="cloud">☁️ Cloud / Login</button>
   </nav>
   <div class="top-actions">
     <button id="themeBtn" title="Toggle theme">🌙 / ☀️</button>
@@ -116,6 +117,28 @@
   </div>
 </section>
 
+
+<!-- CLOUD / KEEL -->
+<section id="app-cloud" class="app">
+  <div class="formats-page">
+    <h1>Cloud database &amp; login — Keel</h1>
+    <p id="keelSession">Not signed in</p>
+    <p class="hint">Base URL is the Keel project you gave me. Your API key is <b>never</b> put in this repo or in GitHub Pages — type it here once and it stays only in this browser. If you shared a live key in chat, rotate it in Keel after this test and paste the new one here instead.</p>
+    <label>Base URL <input id="keelBase" value="https://api.keel.app/v1/moofice"></label><br>
+    <label>API key <input id="keelKey" type="password" placeholder="Paste your Keel API key here (browser-only)"></label><br>
+    <label>Username <input id="keelUser" placeholder="e.g. Mason"></label><br><br>
+    <button id="keelTestBtn">Test connection (GET /items)</button>
+    <button id="keelLoginBtn">Sign in</button>
+    <button id="keelLogoutBtn">Sign out</button>
+    <button id="keelSaveBtn">Save current project to Keel (POST /items)</button>
+    <button id="keelLoadBtn">Load from Keel (GET /items)</button>
+    <p id="keelStatus">Not tested yet. Local saving still works even if Keel is down.</p>
+    <div id="keelList"></div>
+    <h2>What I found testing your endpoint</h2>
+    <p>On 2026-10-30, <code>GET https://api.keel.app/v1/moofice/items</code> returned <b>HTTP 404</b>, and so did that host&apos;s <code>/v1/policies</code> and <code>/v1/cases</code>, while the host home page loads a different app. So the Keel code above is built to your exact GET / POST / DELETE contract, but it will show 404 until the correct Keel project URL is live. Nothing is broken locally: documents, sheets and video settings still save in the browser and via Save Project.</p>
+  </div>
+</section>
+
 <!-- FORMATS -->
 <section id="app-formats" class="app">
   <div class="formats-page">
@@ -136,6 +159,7 @@
 <script src="js/word.js"></script>
 <script src="js/sheets.js"></script>
 <script src="js/video.js"></script>
+<script src="js/keel.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
