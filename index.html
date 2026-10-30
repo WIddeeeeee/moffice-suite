@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOffice Suite — Word, Sheets & Video</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">⬢ <b>MOffice</b> <span>Suite</span></div>
+  <nav class="tabs" id="tabs">
+    <button data-app="word" class="active">📄 MWord</button>
+    <button data-app="sheets">📊 MSheets</button>
+    <button data-app="video">🎬 MVideo</button>
+    <button data-app="formats">🗂 Formats</button>
+  </nav>
+  <div class="top-actions">
+    <button id="themeBtn" title="Toggle theme">🌙 / ☀️</button>
+    <button id="saveProjectBtn">💾 Save Project</button>
+    <button id="loadProjectBtn">📂 Open Project</button>
+    <input type="file" id="projectFile" accept=".json" hidden>
+  </div>
+</header>
+
+<main>
+<!-- WORD -->
+<section id="app-word" class="app active">
+  <div class="toolbar">
+    <select id="fontFamily"><option>Inter, system-ui</option><option>Georgia, serif</option><option>Arial, sans-serif</option><option>Courier New, monospace</option><option>Times New Roman, serif</option></select>
+    <select id="fontSize"><option value="3">Normal</option><option value="1">Small</option><option value="5">Large</option><option value="6">XL</option><option value="7">XXL</option></select>
+    <button data-cmd="bold"><b>B</b></button><button data-cmd="italic"><i>I</i></button><button data-cmd="underline"><u>U</u></button><button data-cmd="strikeThrough"><s>S</s></button>
+    <button data-cmd="justifyLeft">⬅</button><button data-cmd="justifyCenter">⬌</button><button data-cmd="justifyRight">➡</button><button data-cmd="justifyFull">☰</button>
+    <button data-cmd="insertUnorderedList">• List</button><button data-cmd="insertOrderedList">1. List</button>
+    <button data-cmd="formatBlock" data-val="h1">H1</button><button data-cmd="formatBlock" data-val="h2">H2</button><button data-cmd="formatBlock" data-val="blockquote">Quote</button><button data-cmd="formatBlock" data-val="pre">Code</button>
+    <label>Color <input type="color" id="foreColor" value="#111111"></label>
+    <label>Highlight <input type="color" id="hiliteColor" value="#fff59d"></label>
+    <button id="insertTableBtn">▦ Table</button><button id="insertImageBtn">🖼 Image</button><button id="clearFormatBtn">✕ Clear</button>
+    <span class="sep"></span>
+    <input type="file" id="docFile" accept=".txt,.md,.html,.htm" hidden>
+    <button id="openDocBtn">📂 Open .txt/.md/.html</button>
+    <select id="exportDoc"><option value="">⬇ Export…</option><option value="txt">.txt</option><option value="md">.md</option><option value="html">.html</option><option value="pdf">.pdf (Print)</option></select>
+  </div>
+  <div class="doc-meta"><input id="docTitle" value="Untitled Document" placeholder="Document title"> <span id="wordCount">0 words</span> <span id="docStatus">Ready — autosaves to this browser</span></div>
+  <div id="editor" class="editor" contenteditable="true"><h1>Welcome to MWord</h1><p>Type here. Use the toolbar for bold, headings, lists, tables and colours. Open a <b>.txt</b>, <b>.md</b> or <b>.html</b> file, or export to the same formats — plus Print to PDF.</p><p>Tip: your work autosaves in this browser, and Save Project (top right) downloads everything as one JSON file.</p></div>
+</section>
+
+<!-- SHEETS -->
+<section id="app-sheets" class="app">
+  <div class="toolbar">
+    <input id="cellRef" readonly value="A1"> <input id="formulaBar" placeholder="Type a value or formula, e.g. =SUM(A1:A5)">
+    <button id="sheetBold"><b>B</b></button><button id="sheetItalic"><i>I</i></button>
+    <label>Fill <input type="color" id="cellFill" value="#ffffff"></label>
+    <button id="addRowBtn">+ Row</button><button id="addColBtn">+ Column</button><button id="chartBtn">📊 Chart from Column A/B</button>
+    <span class="sep"></span>
+    <input type="file" id="sheetFile" accept=".csv,.tsv,.json" hidden>
+    <button id="openSheetBtn">📂 Open .csv/.tsv/.json</button>
+    <select id="exportSheet"><option value="">⬇ Export…</option><option value="csv">.csv</option><option value="tsv">.tsv</option><option value="json">.json</option></select>
+    <button id="sheetSampleBtn">Load sample budget</button>
+  </div>
+  <p class="hint">Formulas: <code>=SUM(A1:A5)</code> <code>=AVERAGE(B2:B6)</code> <code>=MIN(...)</code> <code>=MAX(...)</code> <code>=COUNT(...)</code> <code>=A1+B2</code> <code>=A1*2</code> — click a cell, type in the formula bar, press Enter.</p>
+  <div class="sheet-wrap"><table id="sheet"></table></div>
+  <canvas id="sheetChart" width="720" height="240" hidden></canvas>
+</section>
+
+<!-- VIDEO -->
+<section id="app-video" class="app">
+  <div class="toolbar">
+    <input type="file" id="videoFile" accept="video/*,.mp4,.webm,.mov,.mkv">
+    <button id="demoVideoBtn">🎞 Load demo clip (canvas animation)</button>
+    <label>Speed <select id="videoSpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+    <label>Volume <input type="range" id="videoVol" min="0" max="100" value="80"></label>
+  </div>
+  <div class="video-layout">
+    <div class="video-stage">
+      <video id="videoPreview" controls playsinline></video>
+      <canvas id="videoCanvas" width="640" height="360" hidden></canvas>
+      <div id="videoOverlay" class="video-overlay"></div>
+      <p id="videoInfo">No video loaded yet. Upload an MP4 / WebM / MOV file, or load the demo clip.</p>
+    </div>
+    <aside class="video-panel">
+      <h3>✂️ Trim</h3>
+      <label>Start <span id="trimStartLabel">0:00</span><input type="range" id="trimStart" min="0" max="100" value="0"></label>
+      <label>End <span id="trimEndLabel">end</span><input type="range" id="trimEnd" min="0" max="100" value="100"></label>
+      <button id="previewTrimBtn">▶ Preview trimmed section</button>
+      <h3>🎨 Filters</h3>
+      <label>Brightness <input type="range" id="fBright" min="50" max="150" value="100"></label>
+      <label>Contrast <input type="range" id="fContrast" min="50" max="150" value="100"></label>
+      <label>Saturate <input type="range" id="fSaturate" min="0" max="200" value="100"></label>
+      <label>Grayscale <input type="range" id="fGray" min="0" max="100" value="0"></label>
+      <label>Sepia <input type="range" id="fSepia" min="0" max="100" value="0"></label>
+      <label>Blur <input type="range" id="fBlur" min="0" max="10" value="0"></label>
+      <h3>🔤 Text overlay</h3>
+      <input id="overlayText" placeholder="Overlay text, e.g. My Movie">
+      <select id="overlayPos"><option value="top">Top</option><option value="center" selected>Center</option><option value="bottom">Bottom</option></select>
+      <label>Size <input type="range" id="overlaySize" min="16" max="72" value="32"></label>
+      <label>Colour <input type="color" id="overlayColor" value="#ffffff"></label>
+      <h3>🎵 Stock music (royalty-free, made in-browser)</h3>
+      <select id="stockTrack">
+        <option value="chill">Chill — soft pads</option>
+        <option value="upbeat">Upbeat — bright pop loop</option>
+        <option value="cinematic">Cinematic — slow swell</option>
+        <option value="lofi">Lo-fi — mellow keys</option>
+        <option value="electronic">Electronic — synth pulse</option>
+      </select>
+      <button id="playMusicBtn">▶ Play stock music</button>
+      <button id="stopMusicBtn">⏹ Stop music</button>
+      <label>Music volume <input type="range" id="musicVol" min="0" max="100" value="50"></label>
+      <p class="hint">Stock tracks are generated live with Web Audio — no copyrighted files, free to use in your exports. You can also upload your own audio:</p>
+      <input type="file" id="musicFile" accept="audio/*">
+      <audio id="customAudio" controls></audio>
+      <h3>⬇ Export</h3>
+      <button id="exportVideoBtn">⏺ Record trimmed clip → .webm</button>
+      <p class="hint" id="exportStatus">Export records the preview (with filters + overlay + stock music) to WebM in your browser. For MP4, most browsers export WebM — convert with any free converter, or play WebM everywhere modern.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- FORMATS -->
+<section id="app-formats" class="app">
+  <div class="formats-page">
+    <h1>Formats MOffice supports</h1>
+    <p>Everything runs in your browser. No uploads, no account, no server — your files stay on your device.</p>
+    <div class="format-grid">
+      <div><h3>📄 MWord</h3><p><b>Open:</b> .txt, .md, .html<br><b>Save:</b> .txt, .md, .html, .pdf (via Print)<br><b>Note:</b> .docx opens in Word/Google Docs from the .html export — rename-free, standards-based.</p></div>
+      <div><h3>📊 MSheets</h3><p><b>Open:</b> .csv, .tsv, .json<br><b>Save:</b> .csv, .tsv, .json<br><b>Note:</b> CSV opens directly in Excel, Google Sheets and LibreOffice.</p></div>
+      <div><h3>🎬 MVideo</h3><p><b>Open:</b> .mp4, .webm, .mov, .mkv, .avi* <br><b>Save:</b> .webm (recorded export)<br><b>Note:</b> *playback depends on your browser's codecs — Chrome/Edge play MP4 + WebM, Safari plays MP4 + MOV.</p></div>
+      <div><h3>🎵 Audio</h3><p><b>Open:</b> .mp3, .wav, .ogg, .m4a<br><b>Stock:</b> 5 built-in royalty-free loops, generated in-browser, plus sound effects in code.</p></div>
+    </div>
+    <h2>How to use it</h2>
+    <ol><li>Open <code>index.html</code> — or host this folder on any static host / GitHub Pages.</li><li>Pick MWord, MSheets or MVideo from the top.</li><li>Save Project downloads one JSON with your document, sheet and video settings.</li></ol>
+  </div>
+</section>
+</main>
+<footer>MOffice Suite • Made for Mason • Runs fully offline in the browser • Stock music is generated, not copyrighted</footer>
+<script src="js/word.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/video.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
