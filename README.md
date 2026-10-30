@@ -40,3 +40,7 @@ Top-right **Save Project** downloads one JSON file with your document, sheet and
 - This is a browser suite, not a clone of Microsoft Office: it does not read/write `.docx` or `.xlsx` natively. CSV opens directly in Excel / Google Sheets / LibreOffice, and HTML exports open in Word.
 - Video export is WebM (what browsers can record). Convert WebM → MP4 with any free converter if you need MP4.
 - The canvas demo clip is a preview animation only; export needs a real uploaded video.
+
+## Cloud / login (Keel)
+
+Open the Cloud / Login tab in the app. Base URL defaults to `https://api.keel.app/v1/moofice`. Paste your Keel API key in the app itself — it is stored only in your browser, never in this repo. GET /items lists projects, POST /items saves the current project, DELETE /items/{id} deletes one. As of 2026-10-30 the supplied endpoint returns HTTP 404, so the app shows that status and keeps working locally until the endpoint is live.
